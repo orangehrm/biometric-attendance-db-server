@@ -1,32 +1,31 @@
 version: '2.1'
 services:
-  db102:
-    image: orangehrm/orangehrm-db-images:mariadb-10.2
-    expose:
-      - "3306"
+  db:
+    image: mariadb:10.2
+    ports:
+      - "9494:3306"
     volumes:
-      - ./logs/mysql_logs/db102:/var/log
       - /etc/localtime:/etc/localtime
       - biometricdata:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: 1234
     networks:
       ohrmdevnet:
-        ipv4_address: 10.5.1.102
+        ipv4_address: 10.4.1.102
     restart: always
-    container_name: dev_mariadb_102
+    container_name: attendance_mariadb_102
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     volumes:
     - /etc/localtime:/etc/localtime
     environment:
-      PMA_HOSTS: db55,db102
+      PMA_HOSTS: db
     networks:
       ohrmdevnet:
-        ipv4_address: 10.5.2.2
+        ipv4_address: 10.4.2.2
     restart: always
-    container_name: dev_phpmyadmin
+    container_name: attendance_phpmyadmin
 
 volumes:
   biometricdata:
@@ -36,5 +35,5 @@ networks:
     driver: bridge
     ipam:
      config:
-       - subnet: 10.5.0.0/16
-         gateway: 10.5.0.1
+       - subnet: 10.4.0.0/16
+         gateway: 10.4.0.1
